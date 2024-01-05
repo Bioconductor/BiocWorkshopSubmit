@@ -6,7 +6,7 @@
     '/request', 'id="{{id}}"', 'title="{{title}}"',
     'description="{{description}}"', 'section="{{section}}"',
     'startfile="{{startfile}}"', 'source="https://github.com/{{ghrepo}}"',
-    'docker="{{url}}:{{tag}}"'
+    'docker="{{url}}:{{tag}}"', 'pkglist="{{pkglist}}"', 'vignettes="{{vignettes}}"'
 )
 
 .ISSUE_GH_REPO <- "Bioconductor/workshop-contributions"
@@ -43,9 +43,9 @@ appCSS <- paste(
 #'
 #' @export
 BiocWorkshopSubmit <- function(...) {
-    fieldsMandatory <- c("id", "title", "section", "ghrepo", "url")
+    fieldsMandatory <- c("id", "title", "section")
     fieldsAll <- c("id", "title", "description", "section",
-        "startfile", "ghrepo", "url", "tag")
+        "startfile", "ghrepo", "url", "tag", "pkglist", "vignettes")
     ui <- fluidPage(
         useShinyjs(),
         inlineCSS(appCSS),
@@ -101,18 +101,20 @@ BiocWorkshopSubmit <- function(...) {
                                 textInput("description", "Description"),
                                 textInput(
                                     "ghrepo",
-                                    label = mandatory("GitHub Repository"),
-                                    placeholder = "username/repository"
+                                    label = "Git Repository",
+                                    placeholder = "https://github.com/username/repository"
                                 ),
                                 textInput(
                                     "startfile", "Start File", value = "README.md"
                                 ),
                                 textInput(
                                     "url",
-                                    label = mandatory("Container URL"),
+                                    label = "Container URL",
                                     placeholder = "ghcr.io/username/repo"
                                 ),
-                                textInput("tag", "Container Tag", value = "latest"),
+                                textInput("tag", "Container Tag", placeholder = "devel"),
+                                textInput("pkglist", "List of packages to pre-install", placeholder="S4Vectors,username/repo,GenomicRanges"),
+                                textInput("vignettes", "List of vignettes to add to container", placeholder="'vignettes/workshop.Rmd,vignettes/workshop2.Rmd' in source repository OR a url list eg: 'https://gist.githubusercontent.com/example/20823a9e7123cc/raw/1a8ec84131286a47926237089de6/workshop.Rmd,https://raw.githubusercontent.com/example/myworkshop/devel/vignettes/workshop2.Rmd'"),
                                 actionButton("render", "Render", class = "btn-primary")
                             ),
                             hr(),
