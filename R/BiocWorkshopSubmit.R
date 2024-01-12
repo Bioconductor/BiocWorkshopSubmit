@@ -5,8 +5,8 @@
     '## READ ONLY: DO NOT EDIT ##',
     '/request', 'id="{{id}}"', 'title="{{title}}"',
     'description="{{description}}"', 'section="{{section}}"',
-    'startfile="{{startfile}}"', 'source="https://github.com/{{ghrepo}}"',
-    'docker="{{url}}:{{tag}}"'
+    'startfile="{{startfile}}"', 'source="{{gitrepo}}"',
+    'docker="{{url}}:{{tag}}"', 'pkglist="{{pkglist}}"', 'vignettes="{{vignettes}}"'
 )
 
 .ISSUE_GH_REPO <- "Bioconductor/workshop-contributions"
@@ -43,9 +43,9 @@ appCSS <- paste(
 #'
 #' @export
 BiocWorkshopSubmit <- function(...) {
-    fieldsMandatory <- c("id", "title", "section", "ghrepo", "url")
+    fieldsMandatory <- c("id", "title", "section")
     fieldsAll <- c("id", "title", "description", "section",
-        "startfile", "ghrepo", "url", "tag")
+        "startfile", "gitrepo", "url", "tag", "pkglist", "vignettes")
     ui <- fluidPage(
         useShinyjs(),
         inlineCSS(appCSS),
@@ -100,19 +100,21 @@ BiocWorkshopSubmit <- function(...) {
                                 ## TODO: point out workshop.bioconductor.org examples
                                 textInput("description", "Description"),
                                 textInput(
-                                    "ghrepo",
-                                    label = mandatory("GitHub Repository"),
-                                    placeholder = "username/repository"
+                                    "gitrepo",
+                                    label = "Git Repository",
+                                    placeholder = "https://github.com/username/repository"
                                 ),
                                 textInput(
                                     "startfile", "Start File", value = "README.md"
                                 ),
                                 textInput(
                                     "url",
-                                    label = mandatory("Container URL"),
+                                    label = "Container URL",
                                     placeholder = "ghcr.io/username/repo"
                                 ),
-                                textInput("tag", "Container Tag", value = "latest"),
+                                textInput("tag", "Container Tag", placeholder = "devel"),
+                                textInput("pkglist", "Packages to pre-install", placeholder="S4Vectors,username/repo,GenomicRanges"),
+                                textInput("vignettes", "Vignettes to add to container (comma sep.)", placeholder="Relative paths to vignettes or URL list e.g., vignettes/workshop.Rmd OR https://gist.githubusercontent.com/user/repo/vignettes/workshop.Rmd"),
                                 actionButton("render", "Render", class = "btn-primary")
                             ),
                             hr(),
@@ -181,9 +183,9 @@ BiocWorkshopSubmit <- function(...) {
 
     server <- function(input, output, session) {
         observeEvent(input$presubmit, {
-            ghrepo <- input[["prepop"]]
-            updateTextInput(session, "ghrepo", value = ghrepo)
-            descfile <- read_gh_file(ghrepo)
+            gitrepo <- paste0("https://github.com/", input[["prepop"]])
+            updateTextInput(session, "gitrepo", value = gitrepo)
+            descfile <- read_gh_file(input[["prepop"]])
             title <- descfile[, "Title"]
             updateTextInput(session, "title", value = unname(title))
             description <- .parse_description(descfile)
