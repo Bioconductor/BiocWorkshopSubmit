@@ -35,11 +35,10 @@ read_gh_file <- function(ghrepo) {
     urls[cont_url]
 }
 
-#' @importFrom utils head
 .parse_description <- function(descfile) {
     description <- descfile[, "Description"]
     description <- gsub("\n", " ", description)
-    head(strsplit(description, "\\.")[[1L]], 1L)
+    utils::head(strsplit(description, "\\.")[[1L]], 1L)
 }
 
 #' @importFrom jsonlite unbox
