@@ -19,6 +19,17 @@ aboutPanel <- function() {
             "https://github.com/Bioconductor/BiocWorkshopSubmit",
             href="https://github.com/Bioconductor/BiocWorkshopSubmit"
         )),
+        br(),
+        p(
+            strong("Note:"),
+            " Some tooltips make references to the workshop ",
+            code("DESCRIPTION"), " file.",
+            " The ", code("Populate"),
+            " button will make use of information from the",
+            " referenced fields to populate the issue template. Using a",
+            code("DESCRIPTION"), " file is the preferred way to declare",
+            " workshop dependencies and to pre-populate the form."
+        ),
         hr(),
         "<details style='margin-bottom:10px;'>", "<summary>",
         "&#9654; Session Info",

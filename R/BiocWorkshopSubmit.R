@@ -77,7 +77,14 @@ BiocWorkshopSubmit <- function(...) {
                                 id = "prepop",
                                 textInput(
                                     inputId = "prepop",
-                                    label = "Existing GitHub Repository",
+                                    label = labelFormat(
+                                        "Existing GitHub Repository",
+                                        paste0(
+                                            "Pre-populate form with existing",
+                                            " workshop information from a",
+                                            " GitHub repository"
+                                        )
+                                    ),
                                     placeholder = "username/repository"
                                 ),
                                 actionButton(
@@ -118,12 +125,19 @@ BiocWorkshopSubmit <- function(...) {
                                     "description",
                                     labelFormat(
                                         "Description",
-                                        "A short secondary title, e.g., Integration of Multi-'Omics Experiments in Bioconductor"
-                                    )
+                                        paste0(
+                                            "Description field in the",
+                                            " DESCRIPTION file"
+                                        )
+                                    ),
+                                    placeholder = "A short secondary title"
                                 ),
                                 textInput(
                                     "gitrepo",
-                                    label = "Git Repository URL",
+                                    labelFormat(
+                                        "GitHub Repository URL",
+                                        "Currently, only GitHub URLs supported"
+                                    ),
                                     placeholder = "https://github.com/username/repository"
                                 ),
                                 textInput(
@@ -138,7 +152,7 @@ BiocWorkshopSubmit <- function(...) {
                                     "url",
                                     label = labelFormat(
                                         "Container URL",
-                                        "URL of the container image, e.g., ghcr.io/username/repo"
+                                        "URL field in the DESCRIPTION file"
                                     ),
                                     placeholder = "ghcr.io/username/repo"
                                 ),
@@ -170,7 +184,17 @@ BiocWorkshopSubmit <- function(...) {
                                         "https://gist.githubusercontent.com/user/repo/vignettes/workshop.Rmd"
                                     )
                                 ),
-                                actionButton("render", "Render", class = "btn-primary")
+                                actionButton("render", "Render", class = "btn-primary"),
+                                bslib::tooltip(
+                                    bsicons::bs_icon(
+                                        "question-circle",
+                                        title = paste0(
+                                            "Generate the GitHub issue comment",
+                                            " text for workshop submission"
+                                        )
+                                    ),
+                                    "Render"
+                                )
                             ),
                             hr(),
                             div(
@@ -204,6 +228,18 @@ BiocWorkshopSubmit <- function(...) {
                                         "post", "Create Issue", icon("paper-plane"),
                                         style = .ISSUE_BTN_CSS,
                                         class = "btn-danger"
+                                    ),
+                                    bslib::tooltip(
+                                        bsicons::bs_icon(
+                                            "question-circle",
+                                            title = paste0(
+                                                "Create a new issue in the",
+                                                " workshop-contributions",
+                                                " repository with the rendered",
+                                                " content"
+                                            )
+                                        ),
+                                        "Create Issue"
                                     )
                                 )
                             ),
