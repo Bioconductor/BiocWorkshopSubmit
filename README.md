@@ -3,13 +3,10 @@
 
 ## Introduction & Installation
 
-The `BiocWorkshopSubmit` package is a Shiny app that allows users to
-submit Bioconductor workshops to the [Bioconductor
-Workshop](https://workshop.bioconductor.org) website via the [workshop
-contributions repository on
-GitHub](https://github.com/Bioconductor/workshop-contributions). The app
-is designed to be used as a standalone local app with a particular
-setup.
+The `BiocWorkshopSubmit` package is a Shiny app that allows users to submit
+Bioconductor workshops to the [Bioconductor Workshop][1] website via the
+[workshop contributions repository on GitHub][2]. The app is designed to be
+used as a standalone local app with a particular setup.
 
 The package is only available on GitHub and can be installed with the
 following command:
@@ -21,31 +18,54 @@ if (!require("BiocManager", quietly = TRUE))
 BiocManager::install("Bioconductor/BiocWorkshopSubmit")
 ```
 
-## Setup
+[1]: https://workshop.bioconductor.org
+[2]: https://github.com/Bioconductor/workshop-contributions
 
-Workshop submitters should include the following files in their
-workshop:
+## Workshop Setup
 
-A `DESCRIPTION` file with the following fields:
+Workshop submitters should model their workshop as packages. There are a
+few key files that are required for a smooth workshop experience. These
+include a `DESCRIPTION` file, a `Dockerfile`, and vignettes. Note that
+the `Dockerfile` will be provided by the [BuildABiocWorkshop][3] template.
+
+[3]: https://github.com/Bioconductor/BuildABiocWorkshop
+
+### `DESCRIPTION` file 
+
+The `DESCRIPTION` file will indicate the packages and the version of R needed
+for the workshop. It should also contain some key information about the
+workshop, such as the title, description, and URL to the workshop repository.
 
 - Title: A title for the workshop
 - Description: A short description of the workshop
 - URL: A URL to the workshop repository from either GHCR or Docker Hub
 
-Note. The container should be built using the `Dockerfile` that is
-included in the example
-[BuildABiocWorkshop](https://github.com/bioconductor/buildabiocworkshop)
-repository. It can either point to `docker.io` or `ghcr.io`.
+Note. The `URL` can point to either a container hosted by Docker (`docker.io`)
+or by the GitHub Container Registry (`ghcr.io`), e.g.,
+`ghcr.io/organization/repository`. The `URL` can also be seen at the built
+container page on GitHub, e.g.,
+<https://github.com/organization/repository/pkgs/container/repository>
+where `organization` and `repository` are placeholders for the organization and
+repository / container names, respectively.
 
-The `DESCRIPTION` file should be used to indicate what packages are
-needed for the workshop. The `DESCRIPTION` file should also be used to
-indicate what version of R is needed for the workshop.
+### `Dockerfile`
 
-Once the container is built, the workshop should be tested locally to
-ensure that it works as expected. The workshop should be tested
-(preferably) on the latest release version of R and Bioconductor.
+The [BuildABiocWorkshop][1] is the recommended way to add a template
+`Dockerfile` to a workshop. The `Dockerfile`, in conjunction with the provided
+GitHub Actions (GHA), is used to build the container and host it on the GitHub
+Container Registry (as set by the `REGISTRY` environment variable in the GHA).
 
-### Creating a GH Issue
+Note. Once the container is built, the workshop should be tested locally to
+ensure that it works as expected. The workshop should be tested, preferably on
+the latest release version Bioconductor and the appropriate version of R.
+
+### Vignettes
+
+The workshop should contain vignettes that will be used as the workshop
+content. As with package vignettes, the vignettes should be placed in the
+`vignettes` directory of the workshop repository.
+
+## Creating a GH Issue
 
 The app will create a GitHub issue in the the `workshop-contributions`
 repository. Submitters should generate a fine-grained personal access
@@ -54,7 +74,7 @@ have the `public_repo` scope. The token should be saved with
 `gitcreds::gitcreds_set()`. Once the token is saved, the app will use it
 to create the issue.
 
-## Usage
+## `BiocWorkshopSubmit` Usage
 
 The app can be launched with the following command:
 
@@ -106,13 +126,30 @@ website.
 - Expected Number of Participants: The expected number of participants
   for the workshop.
 
+### Credentials setup
+
+The app uses the `gh` package to submit an API POST request to create the issue
+in the [workshop contributions repository][2]. It is recommended to add a
+fine-grained personal access GitHub token to the `gitcreds` package.
+The token should have the `public_repo` scope. The token can be added with the
+following command:
+
+``` r
+gitcreds::gitcreds_set()
+```
+
+It is also recommended to use services such as `keychain` on MacOS and
+`seahorse` / `Passwords and Keys` on Ubuntu for encrypted key storage.
+
 ### Submitting the Workshop
 
-After the details of the workshop have been entered, the workshop
-presenter will be able to click the red `Submit` button to submit the
-workshop to the `workshop-contributions` repository. The app will create
-a GitHub issue in the `workshop-contributions` repository with the
-details of the workshop. Please monitor the issue for any comments from
+After the details of the workshop have been entered, the submitter can click on
+the `Render` button to generate the text needed for the workshop issue
+submission at [contributions repository][2]. The text will be displayed on the
+right-hand side of the app. If all the details look correct, the workshop
+presenter can click the red `Create Issue` button to submit the workshop. The
+app will then create a GitHub issue in the `workshop-contributions` repository
+with the details of the workshop. Please monitor the issue for any comments from
 the Bioconductor team.
 
 Thank you for your contribution to the Bioconductor Workshop website!
