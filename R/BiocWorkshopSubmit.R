@@ -18,10 +18,15 @@
     )
 }
 
-mandatory <- function(label) {
+labelFormat <- function(label, description, mandatory = FALSE) {
+    mandatorySpan <- if (mandatory) span("*", class = "mandatory_star")
     tagList(
         label,
-        span("*", class = "mandatory_star")
+        mandatorySpan,
+        bslib::tooltip(
+            bsicons::bs_icon("question-circle", title = description),
+            label
+        )
     )
 }
 
@@ -84,37 +89,87 @@ BiocWorkshopSubmit <- function(...) {
                                 id = "form",
                                 textInput(
                                     "id",
-                                    mandatory("Workshop ID"),
+                                    labelFormat(
+                                        "Workshop ID",
+                                        "An ad-hoc workshop identifier, e.g., 'bioc2023abc123'",
+                                        TRUE
+                                    ),
                                     placeholder = "abc123"
                                 ),
                                 textInput(
                                     "title",
-                                    label = mandatory("Title"),
-                                    placeholder = "A Bioconductor Workshop Title"
+                                    labelFormat(
+                                        "Title",
+                                        "e.g., Package Demo: Package",
+                                        TRUE
+                                    ),
+                                    placeholder = "A Short Workshop Title"
                                 ),
                                 textInput(
                                     "section",
-                                    label = mandatory("Section"),
+                                    label = labelFormat(
+                                        "Section",
+                                        "Event section name as provided by organizers",
+                                        TRUE
+                                    ),
                                     placeholder = "BioC2023"
                                 ),
-                                ## TODO: point out workshop.bioconductor.org examples
-                                textInput("description", "Description"),
+                                textInput(
+                                    "description",
+                                    labelFormat(
+                                        "Description",
+                                        "A short secondary title, e.g., Integration of Multi-'Omics Experiments in Bioconductor"
+                                    )
+                                ),
                                 textInput(
                                     "gitrepo",
-                                    label = "Git Repository",
+                                    label = "Git Repository URL",
                                     placeholder = "https://github.com/username/repository"
                                 ),
                                 textInput(
-                                    "startfile", "Start File", value = "README.md"
+                                    "startfile",
+                                    labelFormat(
+                                        "Start File",
+                                        "Initial file to open in the container"
+                                    ),
+                                    value = "README.md"
                                 ),
                                 textInput(
                                     "url",
-                                    label = "Container URL",
+                                    label = labelFormat(
+                                        "Container URL",
+                                        "URL of the container image, e.g., ghcr.io/username/repo"
+                                    ),
                                     placeholder = "ghcr.io/username/repo"
                                 ),
-                                textInput("tag", "Container Tag", placeholder = "devel"),
-                                textInput("pkglist", "Packages to pre-install", placeholder="S4Vectors,username/repo,GenomicRanges"),
-                                textInput("vignettes", "Vignettes to add to container (comma sep.)", placeholder="Relative paths to vignettes or URL list e.g., vignettes/workshop.Rmd OR https://gist.githubusercontent.com/user/repo/vignettes/workshop.Rmd"),
+                                textInput(
+                                    "tag",
+                                    label = labelFormat(
+                                        "Container Tag",
+                                        "Tag of the container image, e.g., latest"
+                                    ),
+                                    placeholder = "devel"
+                                ),
+                                textInput(
+                                    "pkglist",
+                                    labelFormat(
+                                        "Packages to pre-install",
+                                        "Not needed for workshops with a DESCRIPTION file"
+                                    ),
+                                    placeholder = "S4Vectors,username/repo,GenomicRanges"
+                                ),
+                                textInput(
+                                    "vignettes",
+                                    labelFormat(
+                                        "Vignettes to add to container (comma sep.)",
+                                        "Not needed for workshops with a vignettes folder"
+                                    ),
+                                    placeholder = paste0(
+                                        "Relative paths to vignettes or URL list e.g., ",
+                                        "vignettes/workshop.Rmd OR ",
+                                        "https://gist.githubusercontent.com/user/repo/vignettes/workshop.Rmd"
+                                    )
+                                ),
                                 actionButton("render", "Render", class = "btn-primary")
                             ),
                             hr(),
