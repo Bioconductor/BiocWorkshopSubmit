@@ -1,7 +1,7 @@
 Package: BiocWorkshopSubmit
 Type: Package
 Title: Provides a shiny app for workshop submissions
-Version: 0.99.12
+Version: 0.99.13
 Authors@R: c(
   person(
     "Marcel", "Ramos", , "marcel.ramos@roswellpark.org",
