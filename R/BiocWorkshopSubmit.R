@@ -191,7 +191,7 @@ BiocWorkshopSubmit <- function(...) {
             description <- .parse_description(descfile)
             updateTextInput(session, "description", value = unname(description))
             url <- .dcf_parse_url(descfile)
-            updateTextInput(session, "url", value = unname(url))
+            updateTextInput(session, "url", value = url)
             disable(id = "presubmit")
         })
         observe({

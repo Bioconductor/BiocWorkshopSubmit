@@ -25,8 +25,9 @@ read_gh_file <- function(ghrepo) {
             ""
         }
     )
-    urls <- unlist(strsplit(urlfield, ","))
-    cont_url <- grepl("ghcr|docker", urls)
+    urlfield <- gsub("\n", "", urlfield)
+    urls <- unlist(strsplit(urlfield, ","), use.names = FALSE)
+    cont_url <- grepl("ghcr|docker", urls, ignore.case = TRUE)
     if (!any(cont_url))
         shinytoastr::toastr_warning(
             "No container 'URL' found in the DESCRIPTION file"
