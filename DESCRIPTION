@@ -4,7 +4,7 @@ Title: Provides a shiny app for workshop submissions
 Version: 0.99.13
 Authors@R: c(
   person(
-    "Marcel", "Ramos", , "marcel.ramos@roswellpark.org",
+    "Marcel", "Ramos", , "marcel.ramos@sph.cuny.edu",
     c("aut", "cre"), c(ORCID = "0000-0002-3242-0582")
   ),
   person(
@@ -31,5 +31,5 @@ Imports:
   utils,
   whisker
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Date: 2024-05-13
